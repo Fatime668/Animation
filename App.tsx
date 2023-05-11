@@ -1,9 +1,20 @@
 import { StyleSheet, Text, View,TouchableOpacity,Animated } from 'react-native'
 // import Animated, {withTiming,useSharedValue,useAnimatedStyle} from 'react-native-reanimated'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const App = () => {
+  const [boxColor, setBoxColor] = useState<any>('#2C6E24');
 
+  const handleChangeColor = () =>{
+    const randomColor=getRandomColor()
+    setBoxColor(randomColor) 
+  } 
+
+  const getRandomColor=()=>{
+    const colors:any = ['yellow','red','green','blue','pink','orange','tomato','black','gray','brown','#ccc','#7f6','#088']
+    const randomIndex=Math.floor(Math.random()*colors.length)
+    return colors[randomIndex]   
+  }
   const position = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     const moveBox = () => {
@@ -18,21 +29,22 @@ const App = () => {
           duration: 1000,
           useNativeDriver: true,
         }),
-      ]).start(() => moveBox()); // Tekrarlanacak şekilde hareketi başlatır
+      ]).start(() => moveBox()); 
     };
     moveBox();
 
     return () => {
-      position.stopAnimation(); // Komponent kaldırıldığında animasyonu durdurur
+      position.stopAnimation(); 
     };
   }, [position]);
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Animated.View
+     <TouchableOpacity onPress={handleChangeColor}>
+     <Animated.View
         style={{
           width: 250,
           height: 300,
-          backgroundColor: '#2C6E24',
+          backgroundColor: boxColor,
           borderRadius:15,
           transform: [{ translateY: position }],
         }}
@@ -41,6 +53,7 @@ const App = () => {
       <Text style={styles.txt}>SlideDown Animation</Text>
 
       </Animated.View>
+     </TouchableOpacity>
     </View>
   )
 }
